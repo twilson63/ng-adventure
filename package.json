@@ -1,6 +1,6 @@
 {
   "name": "ng-adventure",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "title: BucketList App author:   name: Tom Wilson   twitter: twilson63   url: http://jackhq.com output: index.html controls: true",
   "main": "index.js",
   "bin": {
