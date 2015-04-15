@@ -1,10 +1,10 @@
 {
   "name": "ng-adventure",
   "version": "1.0.2",
-  "description": "",
+  "description": "title: BucketList App author:   name: Tom Wilson   twitter: twilson63   url: http://jackhq.com output: index.html controls: true",
   "main": "index.js",
   "bin": {
-    "ng-adventure": "node index.js"
+    "ng-adventure": "./index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,5 +16,14 @@
     "adventure": "^2.10.0",
     "adventure-verify": "^2.2.0",
     "multiline": "^1.0.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twilson63/ng-adventure.git"
+  },
+  "bugs": {
+    "url": "https://github.com/twilson63/ng-adventure/issues"
+  },
+  "homepage": "https://github.com/twilson63/ng-adventure"
 }
