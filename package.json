@@ -1,0 +1,17 @@
+{
+  "name": "ng-adventure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tom",
+  "license": "ISC",
+  "dependencies": {
+    "adventure": "^2.10.0",
+    "adventure-verify": "^2.2.0",
+    "multiline": "^1.0.2"
+  }
+}
