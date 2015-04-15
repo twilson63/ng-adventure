@@ -431,12 +431,13 @@ touch index.html</code></pre>
     &lt;title&gt;Foo&lt;/title&gt;
     &lt;link rel=&quot;stylesheet&quot; href=&quot;//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css&quot;&gt;
     &lt;link rel=&quot;stylesheet&quot; href=&quot;//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css&quot;&gt;
-    &lt;link rel=&quot;stylesheet&quot; href=&quot;/custom.css&quot;&gt;
   &lt;/head&gt;
   &lt;body&gt;
     &lt;h1&gt;Hello World&lt;/h1&gt;
     &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js&quot;&gt;&lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 </section>
@@ -473,22 +474,17 @@ ng-adventure verify</code></pre>
 </section>
   </div>
   <div class="slide hidden" id="slide-11">
-    <section class="slide-content"><h4 id="verify-exercise-1">Verify Exercise 1</h4>
-<pre><code>ng-adventure verify</code></pre>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-12">
     <section class="slide-content"><h4 id="confirm-in-browser">Confirm in browser</h4>
 <pre><code>w3</code></pre>
 <p>Point Browser to <a href="http://localhost:3000">http://localhost:3000</a></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-13">
+  <div class="slide hidden" id="slide-12">
     <section class="slide-content"><h3 id="exercise-2-routing">Exercise 2 - Routing</h3>
 <p>Now that we have a working angularjs application, lets go ahead and build out the routing and templates.</p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-14">
+  <div class="slide hidden" id="slide-13">
     <section class="slide-content"><p>First we will modify the index.html file to use the <code>&lt;ui-view&gt;&lt;/ui-view&gt;</code> element.</p>
 <p>Modify:</p>
 <pre><code>&lt;body ng-app=&quot;App&quot;&gt;</code></pre>
@@ -501,7 +497,7 @@ ng-adventure verify</code></pre>
 <pre><code>&lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-15">
+  <div class="slide hidden" id="slide-14">
     <section class="slide-content"><p>Next we need to create an <code>app.js</code> file to contain our routing information.</p>
 <p>app.js</p>
 <pre><code>angular.module(&#39;App&#39;, [&#39;ui.router&#39;])
@@ -513,30 +509,30 @@ ng-adventure verify</code></pre>
       })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-16">
+  <div class="slide hidden" id="slide-15">
     <section class="slide-content"><p>Now we need to create a templates directory and main.html file</p>
 <pre><code>mkdir templates
 touch main.html</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-17">
+  <div class="slide hidden" id="slide-16">
     <section class="slide-content"><p>Edit the main.html and add this:</p>
 <pre><code>&lt;h1&gt;My Bucket List&lt;/h1&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-18">
+  <div class="slide hidden" id="slide-17">
     <section class="slide-content"><h3 id="exercise-3-forms">Exercise 3 - Forms</h3>
 <p>In this exercise we are going to creat a form for our bucket list.  We will
 link the form to our main page by adding an <code>Add</code> button.</p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-19">
+  <div class="slide hidden" id="slide-18">
     <section class="slide-content"><h4 id="create-the-form-template-">Create the form template:</h4>
 <pre><code>cd templates
 touch add.html</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-20">
+  <div class="slide hidden" id="slide-19">
     <section class="slide-content"><h3 id="create-an-html-form-with-the-following-elements-">Create an html form with the following elements:</h3>
 <ul>
 <li>Title - input</li>
@@ -545,7 +541,7 @@ touch add.html</code></pre>
 </ul>
 </section>
   </div>
-  <div class="slide hidden" id="slide-21">
+  <div class="slide hidden" id="slide-20">
     <section class="slide-content"><h3 id="here-is-how-your-form-could-look">Here is how your form could look</h3>
 <pre><code>&lt;div class=&quot;container&quot;&gt;
   &lt;h2&gt;Add&lt;/h2&gt;
@@ -564,7 +560,7 @@ touch add.html</code></pre>
 &lt;/div&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-22">
+  <div class="slide hidden" id="slide-21">
     <section class="slide-content"><h3 id="next-we-have-to-add-our-route-to-our-app-js-file">Next we have to add our route to our app.js file</h3>
 <pre><code>angular.module(&#39;App&#39;, [&#39;ui.router&#39;])
   .config(function($stateProvider) {
@@ -580,56 +576,68 @@ touch add.html</code></pre>
   })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-23">
+  <div class="slide hidden" id="slide-22">
     <section class="slide-content"><h3 id="lastly-we-want-to-create-a-link-on-our-main-html-template-to-our">Lastly, we want to create a link on our main.html template to our</h3>
 <p>add.html template</p>
 <pre><code>&lt;h1&gt;My Bucket List&lt;/h1&gt;
 &lt;a class=&quot;button button-primary&quot; ui-sref=&quot;add&quot;&gt;Add&lt;/a&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-24">
+  <div class="slide hidden" id="slide-23">
     <section class="slide-content"><h3 id="if-we-did-everything-right-we-should-be-able-to-click-the-add-button-and">If we did everything right, we should be able to click the add button and</h3>
 <p>go to our add form</p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-25">
+  <div class="slide hidden" id="slide-24">
     <section class="slide-content"><h3 id="exercise-4">Exercise 4</h3>
 <p>In this exercise we are going to setup a simple service to store our bucket list items:</p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-26">
+  <div class="slide hidden" id="slide-25">
     <section class="slide-content"><h4 id="step-1">Step 1</h4>
 <p>Create a file called <code>services.js</code></p>
 <p>** Hint make sure you are in your project root directory</p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-27">
+  <div class="slide hidden" id="slide-26">
     <section class="slide-content"><h4 id="services-js">Services JS</h4>
 <pre><code>angular.module(&#39;App&#39;)
   .factory(&#39;bucketlist&#39;, function() {
-    var list = [];
+    var db = PouchDB(&#39;bucketlist&#39;)
     return {
-      add: function(thing) {
-        list.push(thing)
+      put: function(thing) {
+        return db.put(thing)
+      },
+      get: function(id) {
+        return db.get(id)
+      },
+      all: function() {
+        return db.allDocs({ include_docs: true})
+          .then(function(res) {
+            return _(res.rows).pluck(&#39;doc&#39;)
+          })
       }
     }
   })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-28">
+  <div class="slide hidden" id="slide-27">
     <section class="slide-content"><h4 id="step-3">Step 3</h4>
 <p>Inject the bucketlist service into your add controller, ok so we don&#39;t have a add controller, we need to create one:</p>
 <p>Create a file called controllers.js</p>
 <pre><code>angular.module(&#39;App&#39;)
-  .controller(&#39;AddController&#39;, function($scope, bucketlist) {
+  .controller(&#39;AddController&#39;, function($scope, bucketlist, $state) {
     $scope.add = function(thing) {
-      bucketlist.add(thing)
-      alert(&#39;added thing&#39;)
+      thing._id = (new Date()).toISOString()
+      bucketlist.put(thing)
+        .then(function(res) {
+          $state.go(&#39;main&#39;)
+        })
     }
   })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-29">
+  <div class="slide hidden" id="slide-28">
     <section class="slide-content"><h4 id="step-4">Step 4</h4>
 <p>Now we need to attach the controller to our route in app.js</p>
 <pre><code>angular.module(&#39;App&#39;, [&#39;ui.router&#39;])
@@ -647,7 +655,7 @@ touch add.html</code></pre>
   })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-30">
+  <div class="slide hidden" id="slide-29">
     <section class="slide-content"><h4 id="step-5">Step 5</h4>
 <p>Finally we need to include the new js files in our index.html</p>
 <pre><code>&lt;!doctype html&gt;
@@ -669,17 +677,38 @@ touch add.html</code></pre>
 &lt;/html&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-31">
-    <section class="slide-content"><p>At this point we should be able to verify our code:</p>
-<pre><code>ng-adventure verify</code></pre>
-<p>or via server</p>
+  <div class="slide hidden" id="slide-30">
+    <section class="slide-content"><p>verify via server</p>
 <pre><code>w3</code></pre>
 <p>open <a href="http://localhost:3000">http://localhost:3000</a></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-32">
+  <div class="slide hidden" id="slide-31">
     <section class="slide-content"><h3 id="exercise-5">Exercise 5</h3>
 <p>Now that we have our form adding data to our service, we want to redirect the user back to the main page and show the new item in a list.</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-32">
+    <section class="slide-content"><p>index.html</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Foo&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/custom.css&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;services.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;controllers.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
 </section>
   </div>
   <div class="slide hidden" id="slide-33">
@@ -692,8 +721,11 @@ touch add.html</code></pre>
 <pre><code>angular.module(&#39;App&#39;)
   .controller(&#39;AddController&#39;, function($scope, bucketlist, $state) {
     $scope.add = function(thing) {
-      bucketlist.add(thing)
-      $state.go(&#39;main&#39;)
+      thing._id = (new Date()).toISOString()
+      bucketlist.put(thing)
+        .then(function(res) {
+          $state.go(&#39;main&#39;)
+        })
     }
   })</code></pre>
 </section>
@@ -708,13 +740,67 @@ touch add.html</code></pre>
       $state.go(&#39;main&#39;)
     }
   })
-  .controller(&#39;MainController&#39;, function($scope, bucketlist, $state) {
-    $scope.bucketlist = bucketlist.all()
+  .controller(&#39;ListController&#39;, function($scope, bucketlist) {
+    bucketlist.all().then(function(things){
+      $scope.$apply(function() {
+        $scope.bucketlist = things  
+      })
+    })
   })</code></pre>
 </section>
   </div>
   <div class="slide hidden" id="slide-36">
     <section class="slide-content"><p>app.js</p>
+<pre><code>angular.module(&#39;App&#39;, [&#39;ui.router&#39;])
+  .config(function($stateProvider) {
+    $stateProvider
+      .state(&#39;main&#39;, {
+        url: &#39;/&#39;,
+        templateUrl: &#39;/templates/main.html&#39;,
+        controller: &#39;ListController&#39;
+      })
+      .state(&#39;add&#39;, {
+        url: &#39;/add&#39;,
+        templateUrl: &#39;/templates/add.html&#39;,
+        controller: &#39;AddController&#39;
+      })
+  })</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-37">
+    <section class="slide-content"><h3 id="exercise-6">Exercise 6</h3>
+<p>Now that we have our list, lets render it to our main template using ng-repeat</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-38">
+    <section class="slide-content"><p>main.html</p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+  &lt;h1&gt;My Bucket List&lt;/h1&gt;
+  &lt;a class=&quot;button button-primary&quot; ui-sref=&quot;add&quot;&gt;Add&lt;/a&gt;
+  &lt;ul&gt;
+    &lt;li ng-repeat=&quot;thing in bucketlist&quot;&gt;
+      {{thing.title}}
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-39">
+    <section class="slide-content"><p>Let restart run the server and see</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-40">
+    <section class="slide-content"><h3 id="exercise-7">Exercise 7</h3>
+<p>List create a show page to display our bucket list item</p>
+<ul>
+<li>create a new route called show</li>
+<li>create a new templates called show.html</li>
+<li>create a new controller called ShowController</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-41">
+    <section class="slide-content"><h4 id="app-js">app.js</h4>
 <pre><code>angular.module(&#39;App&#39;, [&#39;ui.router&#39;])
   .config(function($stateProvider) {
     $stateProvider
@@ -728,47 +814,194 @@ touch add.html</code></pre>
         templateUrl: &#39;/templates/add.html&#39;,
         controller: &#39;AddController&#39;
       })
+      .state(&#39;show&#39;, {
+        url: &#39;/show/:id&#39;,
+        templateUrl: &#39;/templates/show.html&#39;,
+        controller: &#39;ShowController&#39;
+      })
   })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-37">
-    <section class="slide-content"><p>And we have to create a new function on our service to provide all of the bucketlist items</p>
-<p>services.js</p>
+  <div class="slide hidden" id="slide-42">
+    <section class="slide-content"><h4 id="show-html">show.html</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+  &lt;h2&gt;{{thing.title}}&lt;/h2&gt;
+  &lt;p&gt;{{thing.description}}&lt;/p&gt;
+  &lt;a class=&quot;button&quot; ui-sref=&quot;edit({ id: thing._id})&quot;&gt;Edit&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-43">
+    <section class="slide-content"><h4 id="controllers-js">controllers.js</h4>
 <pre><code>angular.module(&#39;App&#39;)
-  .factory(&#39;bucketlist&#39;, function() {
-    var list = [];
-    return {
-      add: function(thing) {
-        list.push(thing)
-      },
-      all: function() {
-        return list
-      }
+  .controller(&#39;AddController&#39;, function($scope, bucketlist, $state) {
+    $scope.add = function(thing) {
+      thing._id = (new Date()).toISOString()
+      bucketlist.put(thing)
+        .then(function(res) {
+          $state.go(&#39;main&#39;)
+        })
+    }
+  })
+  .controller(&#39;ListController&#39;, function($scope, bucketlist) {
+    bucketlist.all().then(function(things){
+      $scope.$apply(function() {
+        $scope.bucketlist = things  
+      })
+    })
+  })
+  .controller(&#39;ShowController&#39;, function($scope, bucketlist, $stateParams) {
+    bucketlist.get($stateParams.id).then(function(thing) {
+      $scope.$apply(function() {
+        $scope.thing = thing
+      })
+    })
+  })</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-44">
+    <section class="slide-content"><h4 id="main-html">main.html</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+  &lt;h1&gt;My Bucket List&lt;/h1&gt;
+  &lt;a class=&quot;button button-primary&quot; ui-sref=&quot;add&quot;&gt;Add&lt;/a&gt;
+  &lt;ul&gt;
+    &lt;li ng-repeat=&quot;thing in bucketlist&quot;&gt;
+      &lt;a ui-sref=&quot;show({ id: thing._id })&quot;&gt;
+        {{thing.title}}
+      &lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-45">
+    <section class="slide-content"><h3 id="exercise-8">Exercise 8</h3>
+<p>Lets create a Edit form</p>
+<ul>
+<li>create a new route called edit</li>
+<li>create a new templates called edit.html</li>
+<li>create a new controller called EditController</li>
+<li>create a button on show template to direct to Edit Route</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-46">
+    <section class="slide-content"><h4 id="app-js">app.js</h4>
+<pre><code>angular.module(&#39;App&#39;, [&#39;ui.router&#39;])
+  .config(function($stateProvider) {
+    $stateProvider
+      .state(&#39;main&#39;, {
+        url: &#39;/&#39;,
+        templateUrl: &#39;/templates/main.html&#39;,
+        controller: &#39;MainController&#39;
+      })
+      .state(&#39;add&#39;, {
+        url: &#39;/add&#39;,
+        templateUrl: &#39;/templates/add.html&#39;,
+        controller: &#39;AddController&#39;
+      })
+      .state(&#39;show&#39;, {
+        url: &#39;/show/:id&#39;,
+        templateUrl: &#39;/templates/show.html&#39;,
+        controller: &#39;ShowController&#39;
+      })
+      .state(&#39;edit&#39;, {
+        url: &#39;/edit/:id&#39;,
+        templateUrl: &#39;/templates/edit.html&#39;,
+        controller: &#39;EditController&#39;
+      })
+  })</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-47">
+    <section class="slide-content"><h4 id="edit-html">edit.html</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+  &lt;h2&gt;Edit&lt;/h2&gt;
+  &lt;form ng-submit=&quot;update(thing)&quot;&gt;
+    &lt;fieldset&gt;
+      &lt;label&gt;Title&lt;/label&gt;
+      &lt;input class=&quot;u-full-width&quot; type=&quot;text&quot; ng-model=&quot;thing.title&quot;&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+      &lt;label&gt;Description&lt;/label&gt;
+      &lt;textarea class=&quot;u-full-width&quot; ng-model=&quot;thing.description&quot;&gt;&lt;/textarea&gt;
+    &lt;/fieldset&gt;
+    &lt;button class=&quot;button-primary u-pull-right&quot;&gt;Save&lt;/button&gt;
+    &lt;a class=&quot;button u-pull-right&quot; ui-sref=&quot;index&quot;&gt;Cancel&lt;/a&gt;
+  &lt;/form&gt;
+&lt;/div&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-48">
+    <section class="slide-content"><h4 id="controllers-js">controllers.js</h4>
+<pre><code>angular.module(&#39;App&#39;)
+  .controller(&#39;AddController&#39;, function($scope, bucketlist, $state) {
+    $scope.add = function(thing) {
+      thing._id = (new Date()).toISOString()
+      bucketlist.put(thing)
+        .then(function(res) {
+          $state.go(&#39;main&#39;)
+        })
+    }
+  })
+  .controller(&#39;ListController&#39;, function($scope, bucketlist) {
+    bucketlist.all().then(function(things){
+      $scope.$apply(function() {
+        $scope.bucketlist = things  
+      })
+    })
+  })
+  .controller(&#39;ShowController&#39;, function($scope, bucketlist, $stateParams) {
+    bucketlist.get($stateParams.id).then(function(thing) {
+      $scope.$apply(function() {
+        $scope.thing = thing
+      })
+    })
+  })
+  .controller(&#39;EditController&#39;, function($scope, bucketlist, $stateParams, $state) {
+    bucketlist.get($stateParams.id).then(function(thing) {
+      $scope.$apply(function() {
+        $scope.thing = thing
+      })
+    })
+    $scope.update = function(thing) {
+      bucketlist.put(thing)
+        .then(function(res) {
+          $state.go(&#39;show&#39;, { id: thing._id})
+        })
     }
   })</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-38">
-    <section class="slide-content"><h3 id="exercise-6">Exercise 6</h3>
-<p>Now that we have our list, lets render it to our main template using ng-repeat</p>
+  <div class="slide hidden" id="slide-49">
+    <section class="slide-content"><h4 id="show-html">show.html</h4>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+  &lt;h2&gt;{{thing.title}}&lt;/h2&gt;
+  &lt;p&gt;{{thing.description}}&lt;/p&gt;
+  &lt;a class=&quot;button&quot; ui-sref=&quot;edit({ id: thing._id})&quot;&gt;Edit&lt;/a&gt;
+  &lt;a class=&quot;button&quot; ui-sref=&quot;main&quot;&gt;Bucket List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-39">
-    <section class="slide-content"><p>main.html</p>
-<pre><code>&lt;h1&gt;My Bucket List&lt;/h1&gt;
-&lt;a class=&quot;button button-primary&quot; ui-sref=&quot;add&quot;&gt;Add&lt;/a&gt;
-&lt;ul&gt;
-  &lt;li ng-repeat=&quot;thing in bucketlist&quot;&gt;
-    {{thing.title}}
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+  <div class="slide hidden" id="slide-50">
+    <section class="slide-content"><h3 id="exercise-9">Exercise 9</h3>
+<p>Adding a couple of items</p>
+<p>...</p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-40">
-    <section class="slide-content"><p>Let restart run the server and see</p>
+  <div class="slide hidden" id="slide-51">
+    <section class="slide-content"><p>Lets create a filter</p>
+   <input class="u-full-width" placeholder="find by title" type="text" ng-model="thing.title">
+
+<p>...</p>
+<pre><code>&lt;li ng-repeat=&quot;thing in bucketlist | filter:thing&quot;&gt;
+  &lt;a ui-sref=&quot;show({ id: thing._id })&quot;&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-41">
+  <div class="slide hidden" id="slide-52">
+    <section class="slide-content"></section>
+  </div>
+  <div class="slide hidden" id="slide-53">
     <section class="slide-content"><div class="author">
   <h1 class="name">Tom Wilson</h1>
     <h3 class="twitter">

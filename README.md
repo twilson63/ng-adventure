@@ -41,12 +41,13 @@ edit index.html
         <title>Foo</title>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-        <link rel="stylesheet" href="/custom.css">
       </head>
       <body>
         <h1>Hello World</h1>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
       </body>
     </html>
 
@@ -88,12 +89,6 @@ Inside the body element remove `<h1>Hello World</h1>` and add the following:
 
     <div ng-init="title = 'My Bucket List'"></div>
     <h1>{{title}}</h1>
-
---
-
-#### Verify Exercise 1
-
-    ng-adventure verify
 
 --
 
@@ -248,10 +243,19 @@ Create a file called `services.js`
 
     angular.module('App')
       .factory('bucketlist', function() {
-        var list = [];
+        var db = PouchDB('bucketlist')
         return {
-          add: function(thing) {
-            list.push(thing)
+          put: function(thing) {
+            return db.put(thing)
+          },
+          get: function(id) {
+            return db.get(id)
+          },
+          all: function() {
+            return db.allDocs({ include_docs: true})
+              .then(function(res) {
+                return _(res.rows).pluck('doc')
+              })
           }
         }
       })
@@ -265,12 +269,16 @@ Inject the bucketlist service into your add controller, ok so we don't have a ad
 Create a file called controllers.js
 
     angular.module('App')
-      .controller('AddController', function($scope, bucketlist) {
+      .controller('AddController', function($scope, bucketlist, $state) {
         $scope.add = function(thing) {
-          bucketlist.add(thing)
-          alert('added thing')
+          thing._id = (new Date()).toISOString()
+          bucketlist.put(thing)
+            .then(function(res) {
+              $state.go('main')
+            })
         }
       })
+
 
 --
 
@@ -318,11 +326,7 @@ Finally we need to include the new js files in our index.html
 
 --
 
-At this point we should be able to verify our code:
-
-    ng-adventure verify
-
-or via server
+verify via server
 
     w3
 
@@ -337,6 +341,31 @@ Now that we have our form adding data to our service, we want to redirect the us
 
 --
 
+index.html
+
+    <!doctype html>
+    <html>
+      <head>
+        <title>Foo</title>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+        <link rel="stylesheet" href="/custom.css">
+      </head>
+      <body>
+        <h1>Hello World</h1>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+        <script src="app.js"></script>
+        <script src="services.js"></script>
+        <script src="controllers.js"></script>
+      </body>
+    </html>
+
+
+--
+
 ### Step 1
 
 We need to inject the $state service in our add controller, then use the $state.go method to redirect to the main state.
@@ -348,8 +377,11 @@ controllers.js
     angular.module('App')
       .controller('AddController', function($scope, bucketlist, $state) {
         $scope.add = function(thing) {
-          bucketlist.add(thing)
-          $state.go('main')
+          thing._id = (new Date()).toISOString()
+          bucketlist.put(thing)
+            .then(function(res) {
+              $state.go('main')
+            })
         }
       })
 
@@ -366,13 +398,70 @@ controllers.js
           $state.go('main')
         }
       })
-      .controller('MainController', function($scope, bucketlist, $state) {
-        $scope.bucketlist = bucketlist.all()
+      .controller('ListController', function($scope, bucketlist) {
+        bucketlist.all().then(function(things){
+          $scope.$apply(function() {
+            $scope.bucketlist = things  
+          })
+        })
       })
 
 --
 
 app.js
+
+    angular.module('App', ['ui.router'])
+      .config(function($stateProvider) {
+        $stateProvider
+          .state('main', {
+            url: '/',
+            templateUrl: '/templates/main.html',
+            controller: 'ListController'
+          })
+          .state('add', {
+            url: '/add',
+            templateUrl: '/templates/add.html',
+            controller: 'AddController'
+          })
+      })
+
+--
+
+### Exercise 6
+
+Now that we have our list, lets render it to our main template using ng-repeat
+
+--
+
+main.html
+
+    <div class="container">
+      <h1>My Bucket List</h1>
+      <a class="button button-primary" ui-sref="add">Add</a>
+      <ul>
+        <li ng-repeat="thing in bucketlist">
+          {{thing.title}}
+        </li>
+      </ul>
+    </div>
+
+--
+
+Let restart run the server and see 
+
+--
+
+### Exercise 7
+
+List create a show page to display our bucket list item
+
+* create a new route called show
+* create a new templates called show.html
+* create a new controller called ShowController
+
+--
+
+#### app.js
 
     angular.module('App', ['ui.router'])
       .config(function($stateProvider) {
@@ -387,46 +476,200 @@ app.js
             templateUrl: '/templates/add.html',
             controller: 'AddController'
           })
+          .state('show', {
+            url: '/show/:id',
+            templateUrl: '/templates/show.html',
+            controller: 'ShowController'
+          })
       })
 
 --
 
-And we have to create a new function on our service to provide all of the bucketlist items
+#### show.html
 
-services.js
+    <div class="container">
+      <h2>{{thing.title}}</h2>
+      <p>{{thing.description}}</p>
+      <a class="button" ui-sref="edit({ id: thing._id})">Edit</a>
+    </div>
+
+--
+
+#### controllers.js
 
     angular.module('App')
-      .factory('bucketlist', function() {
-        var list = [];
-        return {
-          add: function(thing) {
-            list.push(thing)
-          },
-          all: function() {
-            return list
-          }
+      .controller('AddController', function($scope, bucketlist, $state) {
+        $scope.add = function(thing) {
+          thing._id = (new Date()).toISOString()
+          bucketlist.put(thing)
+            .then(function(res) {
+              $state.go('main')
+            })
+        }
+      })
+      .controller('ListController', function($scope, bucketlist) {
+        bucketlist.all().then(function(things){
+          $scope.$apply(function() {
+            $scope.bucketlist = things  
+          })
+        })
+      })
+      .controller('ShowController', function($scope, bucketlist, $stateParams) {
+        bucketlist.get($stateParams.id).then(function(thing) {
+          $scope.$apply(function() {
+            $scope.thing = thing
+          })
+        })
+      })
+
+--
+
+#### main.html
+
+    <div class="container">
+      <h1>My Bucket List</h1>
+      <a class="button button-primary" ui-sref="add">Add</a>
+      <ul>
+        <li ng-repeat="thing in bucketlist">
+          <a ui-sref="show({ id: thing._id })">
+            {{thing.title}}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+--
+
+### Exercise 8
+
+Lets create a Edit form
+
+* create a new route called edit
+* create a new templates called edit.html
+* create a new controller called EditController
+* create a button on show template to direct to Edit Route
+
+--
+
+
+#### app.js
+
+    angular.module('App', ['ui.router'])
+      .config(function($stateProvider) {
+        $stateProvider
+          .state('main', {
+            url: '/',
+            templateUrl: '/templates/main.html',
+            controller: 'MainController'
+          })
+          .state('add', {
+            url: '/add',
+            templateUrl: '/templates/add.html',
+            controller: 'AddController'
+          })
+          .state('show', {
+            url: '/show/:id',
+            templateUrl: '/templates/show.html',
+            controller: 'ShowController'
+          })
+          .state('edit', {
+            url: '/edit/:id',
+            templateUrl: '/templates/edit.html',
+            controller: 'EditController'
+          })
+      })
+
+--
+
+#### edit.html
+
+    <div class="container">
+      <h2>Edit</h2>
+      <form ng-submit="update(thing)">
+        <fieldset>
+          <label>Title</label>
+          <input class="u-full-width" type="text" ng-model="thing.title">
+        </fieldset>
+        <fieldset>
+          <label>Description</label>
+          <textarea class="u-full-width" ng-model="thing.description"></textarea>
+        </fieldset>
+        <button class="button-primary u-pull-right">Save</button>
+        <a class="button u-pull-right" ui-sref="index">Cancel</a>
+      </form>
+    </div>
+
+--
+
+#### controllers.js
+
+    angular.module('App')
+      .controller('AddController', function($scope, bucketlist, $state) {
+        $scope.add = function(thing) {
+          thing._id = (new Date()).toISOString()
+          bucketlist.put(thing)
+            .then(function(res) {
+              $state.go('main')
+            })
+        }
+      })
+      .controller('ListController', function($scope, bucketlist) {
+        bucketlist.all().then(function(things){
+          $scope.$apply(function() {
+            $scope.bucketlist = things  
+          })
+        })
+      })
+      .controller('ShowController', function($scope, bucketlist, $stateParams) {
+        bucketlist.get($stateParams.id).then(function(thing) {
+          $scope.$apply(function() {
+            $scope.thing = thing
+          })
+        })
+      })
+      .controller('EditController', function($scope, bucketlist, $stateParams, $state) {
+        bucketlist.get($stateParams.id).then(function(thing) {
+          $scope.$apply(function() {
+            $scope.thing = thing
+          })
+        })
+        $scope.update = function(thing) {
+          bucketlist.put(thing)
+            .then(function(res) {
+              $state.go('show', { id: thing._id})
+            })
         }
       })
 
 --
 
-### Exercise 6
+#### show.html
 
-Now that we have our list, lets render it to our main template using ng-repeat
-
---
-
-main.html
-
-    <h1>My Bucket List</h1>
-    <a class="button button-primary" ui-sref="add">Add</a>
-    <ul>
-      <li ng-repeat="thing in bucketlist">
-        {{thing.title}}
-      </li>
-    </ul>
+    <div class="container">
+      <h2>{{thing.title}}</h2>
+      <p>{{thing.description}}</p>
+      <a class="button" ui-sref="edit({ id: thing._id})">Edit</a>
+      <a class="button" ui-sref="main">Bucket List</a>
+    </div>
 
 --
 
-Let restart run the server and see 
+### Exercise 9
+
+Adding a couple of items
+
+...
+
+--
+
+Lets create a filter
+
+   <input class="u-full-width" placeholder="find by title" type="text" ng-model="thing.title">
+
+...
+
+    <li ng-repeat="thing in bucketlist | filter:thing">
+      <a ui-sref="show({ id: thing._id })">
+
+--
 

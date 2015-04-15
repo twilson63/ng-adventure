@@ -22,9 +22,12 @@ Create a file called `services.js`
 
     angular.module('App')
       .factory('bucketlist', function() {
-        var list = [];
+        var list = []
+        var counter = 1
         return {
           add: function(thing) {
+            thing.id = counter
+            counter += 1
             list.push(thing)
           }
         }
@@ -94,9 +97,12 @@ Finally we need to include the new js files in our index.html
 var solution1 = multiline(function() {/*
 angular.module('App')
   .factory('bucketlist', function() {
-    var list = [];
+    var list = []
+    var counter = 1
     return {
       add: function(thing) {
+        thing.id = counter
+        counter += 1
         list.push(thing)
       }
     }
