@@ -132,7 +132,8 @@ Next we need to create an `app.js` file to contain our routing information.
 app.js
 
     angular.module('App', ['ui.router'])
-      .config(function($stateProvider) {
+      .config(function($urlRouterProvider, $stateProvider) {
+        $urlRouterProvider.otherwise('/')
         $stateProvider
           .state('main', {
             url: '/',
