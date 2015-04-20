@@ -58,14 +58,14 @@ edit index.html
 So lets validate our setup, in order to do this, we need to install tap:
 
     npm i ng-adventure -g
-    ng-adventure 
+    ng-adventure
     ng-adventure verify
 
 --
 
-### Run 
+### Run
 
-    w3 
+    w3
 
 open browser http://localhost:3000
 
@@ -73,7 +73,7 @@ open browser http://localhost:3000
 
 ### Exercise 1 - Databinding
 
-In this exercise we are going to create an angular app and setup two databinding to confirm we have everything setup correctly.  
+In this exercise we are going to create an angular app and setup two databinding to confirm we have everything setup correctly.
 
 --
 
@@ -139,6 +139,7 @@ app.js
             url: '/',
             templateUrl: '/templates/main.html'
           })
+      })
 --
 
 Now we need to create a templates directory and main.html file
@@ -240,7 +241,10 @@ Create a file called `services.js`
 
 --
 
-#### Services JS
+#### Step 2
+
+Edit the service.js to create a bucketlist
+service.js
 
     angular.module('App')
       .factory('bucketlist', function() {
@@ -313,12 +317,13 @@ Finally we need to include the new js files in our index.html
         <title>Foo</title>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-        <link rel="stylesheet" href="/custom.css">
       </head>
-      <body>
-        <h1>Hello World</h1>
+      <body ng-app="App">
+        <ui-view></ui-view>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
         <script src="app.js"></script>
         <script src="services.js"></script>
         <script src="controllers.js"></script>
@@ -350,10 +355,9 @@ index.html
         <title>Foo</title>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-        <link rel="stylesheet" href="/custom.css">
       </head>
-      <body>
-        <h1>Hello World</h1>
+      <body ng-app="App">
+        <ui-view></ui-view>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js"></script>
@@ -402,7 +406,7 @@ controllers.js
       .controller('ListController', function($scope, bucketlist) {
         bucketlist.all().then(function(things){
           $scope.$apply(function() {
-            $scope.bucketlist = things  
+            $scope.bucketlist = things
           })
         })
       })
@@ -448,7 +452,7 @@ main.html
 
 --
 
-Let restart run the server and see 
+Let restart run the server and see
 
 --
 
@@ -511,7 +515,7 @@ List create a show page to display our bucket list item
       .controller('ListController', function($scope, bucketlist) {
         bucketlist.all().then(function(things){
           $scope.$apply(function() {
-            $scope.bucketlist = things  
+            $scope.bucketlist = things
           })
         })
       })
@@ -617,7 +621,7 @@ Lets create a Edit form
       .controller('ListController', function($scope, bucketlist) {
         bucketlist.all().then(function(things){
           $scope.$apply(function() {
-            $scope.bucketlist = things  
+            $scope.bucketlist = things
           })
         })
       })
