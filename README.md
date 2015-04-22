@@ -81,6 +81,10 @@ In this exercise we are going to create an angular app and setup two databinding
 
 On the body element of your index.html file add the `ng-app` attribute.
 
+    <body ng-app>
+
+ng-app is an angular directive that designates the root element of the application and is typically placed near the root element of the page - e.g. on the <body> or <html> tags.
+
 --
 
 #### Step 2
@@ -89,6 +93,8 @@ Inside the body element remove `<h1>Hello World</h1>` and add the following:
 
     <div ng-init="title = 'My Bucket List'"></div>
     <h1>{{title}}</h1>
+
+ng-init is an angular directive that allows the page to evaluate an expression in the current scope. In this case {{title}} is being evaluated as the title set in the ng-init.
 
 --
 
@@ -121,13 +127,28 @@ Add:
 
      <ui-view></ui-view>
 
-Also add the app.js file at the end of the body
+Also add the app.js file at the end of the body. We will create the file in a moment.
 
     <script src="app.js"></script>
 
 --
 
+Now we need to create a templates directory and main.html file
+
+    mkdir templates
+    touch templates/main.html
+
+--
+
+Edit the main.html and add this:
+
+    <h1>My Bucket List</h1>
+
+--
+
 Next we need to create an `app.js` file to contain our routing information.
+
+    touch app.js
 
 app.js
 
@@ -140,18 +161,6 @@ app.js
             templateUrl: '/templates/main.html'
           })
       })
---
-
-Now we need to create a templates directory and main.html file
-
-    mkdir templates
-    touch main.html
-
---
-
-Edit the main.html and add this:
-
-    <h1>My Bucket List</h1>
 
 --
 
@@ -181,14 +190,14 @@ link the form to our main page by adding an `Add` button.
 
     <div class="container">
       <h2>Add</h2>
-      <form ng-submit="add(thing)">
+      <form>
         <fieldset>
           <label>Title</label>
-          <input class="u-full-width" type="text" ng-model="thing.title">
+          <input class="u-full-width" type="text">
         </fieldset>
         <fieldset>
           <label>Description</label>
-          <textarea class="u-full-width" ng-model="thing.description"></textarea>
+          <textarea class="u-full-width"></textarea>
         </fieldset>
         <button class="button-primary u-pull-right">Save</button>
         <a class="button u-pull-right" ui-sref="index">Cancel</a>
@@ -244,14 +253,14 @@ Create a file called `services.js`
 #### Step 2
 
 Edit the service.js to create a bucketlist
-service.js
+service.js. It will need to know how to add new items, get a specific item, and show all items.
 
     angular.module('App')
       .factory('bucketlist', function() {
         var db = PouchDB('bucketlist')
         return {
-          put: function(thing) {
-            return db.put(thing)
+          put: function(item) {
+            return db.put(item)
           },
           get: function(id) {
             return db.get(id)
@@ -269,18 +278,15 @@ service.js
 
 #### Step 3
 
-Inject the bucketlist service into your add controller, ok so we don't have a add controller, we need to create one:
+Inject the bucketlist service into your add controller, ok so we don't have an add controller, we need to create one:
 
 Create a file called controllers.js
 
     angular.module('App')
-      .controller('AddController', function($scope, bucketlist, $state) {
-        $scope.add = function(thing) {
-          thing._id = (new Date()).toISOString()
-          bucketlist.put(thing)
-            .then(function(res) {
-              $state.go('main')
-            })
+      .controller('AddController', function($scope, bucketlist) {
+        $scope.add = function(item) {
+          item._id = (new Date()).toISOString()
+          bucketlist.put(item)
         }
       })
 
@@ -308,6 +314,28 @@ Now we need to attach the controller to our route in app.js
 --
 
 #### Step 5
+
+With the bucketlist created, lets attach it to the add.html form
+
+First let's create a link between the form and the item we're adding using ng-model
+
+    <fieldset>
+      <label>Title</label>
+      <input class="u-full-width" type="text" ng-model="item.title">
+    </fieldset>
+    <fieldset>
+      <label>Description</label>
+      <textarea class="u-full-width" ng-model="item.description"></textarea>
+    </fieldset>
+
+Then lets tell the form how to add the new item using the fancy add function we created in the controller
+
+    <form ng-submit="add(item)">
+
+--
+
+
+#### Step 6
 
 Finally we need to include the new js files in our index.html
 
@@ -347,35 +375,9 @@ Now that we have our form adding data to our service, we want to redirect the us
 
 --
 
-index.html
-
-    <!doctype html>
-    <html>
-      <head>
-        <title>Foo</title>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-      </head>
-      <body ng-app="App">
-        <ui-view></ui-view>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
-        <script src="app.js"></script>
-        <script src="services.js"></script>
-        <script src="controllers.js"></script>
-      </body>
-    </html>
-
-
---
-
 ### Step 1
 
 We need to inject the $state service in our add controller, then use the $state.go method to redirect to the main state.
-
---
 
 controllers.js
 
@@ -436,33 +438,32 @@ app.js
 
 Now that we have our list, lets render it to our main template using ng-repeat
 
---
-
 main.html
 
     <div class="container">
       <h1>My Bucket List</h1>
       <a class="button button-primary" ui-sref="add">Add</a>
       <ul>
-        <li ng-repeat="thing in bucketlist">
-          {{thing.title}}
+        <li ng-repeat="item in bucketlist">
+          {{item.title}}
         </li>
       </ul>
     </div>
 
 --
 
-Let restart run the server and see
+Let's restart the server and see
 
 --
 
 ### Exercise 7
 
-List create a show page to display our bucket list item
+Create a show page to display our bucket list item
 
 * create a new route called show
 * create a new templates called show.html
 * create a new controller called ShowController
+* create a link to the item's show page
 
 --
 
